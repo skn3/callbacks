@@ -1,5 +1,8 @@
 Strict
 
+'version 1
+' - first commit
+
 Import monkey.boxes
 Import monkey.map
 Import skn3.arraylist
@@ -44,7 +47,7 @@ Function RemoveCallbackReciever:Void(reciever:CallbackReciever)
 	Local list:ArrayList<CallbackReciever>
 	For Local listId:= EachIn recieverIdLists.Keys()
 		list = recieverIdLists.ValueForKey(listId)
-		If List
+		If list
 			'remove reciever from list
 			list.Remove(reciever)
 			
