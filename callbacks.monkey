@@ -73,39 +73,42 @@ Function AddCallbackReciever:Void(reciever:CallbackReciever, id:int)
 	If list.Contains(reciever) = False list.AddLast(reciever)
 End
 
-Function FireCallback:Void(id:Int, source:Object, data:Object)
+Function FireCallback:Bool(id:Int, source:Object, data:Object)
 	' --- fires a callback ---
 	Local list:= recieverIdLists.ValueForKey(id)
 	If list
 		'fire callback for all recievers
 		For Local index:= 0 Until list.count
 			'check for a callback blocking further execution
-			If list.data[index].OnCallback(id, source, data) = True Return
+			If list.data[index].OnCallback(id, source, data) = True Return True
 		Next
 	EndIf
+	
+	'return that it wasn't blocked
+	Return False
 End
 
-Function FireCallback:Void(id:Int, source:Object)
+Function FireCallback:Bool(id:Int, source:Object)
 	' --- shortcut to auto box ---
-	FireCallback(id, source, Null)
+	Return FireCallback(id, source, Null)
 End
 
-Function FireCallback:Void(id:Int, source:Object, data:String)
+Function FireCallback:Bool(id:Int, source:Object, data:String)
 	' --- shortcut to auto box ---
-	FireCallback(id, source, Object(StringObject(data)))
+	Return FireCallback(id, source, Object(StringObject(data)))
 End
 
-Function FireCallback:Void(id:Int, source:Object, data:Bool)
+Function FireCallback:Bool(id:Int, source:Object, data:Bool)
 	' --- shortcut to auto box ---
-	FireCallback(id, source, Object(BoolObject(data)))
+	Return FireCallback(id, source, Object(BoolObject(data)))
 End
 
-Function FireCallback:Void(id:Int, source:Object, data:int)
+Function FireCallback:Bool(id:Int, source:Object, data:int)
 	' --- shortcut to auto box ---
-	FireCallback(id, source, Object(IntObject(data)))
+	Return FireCallback(id, source, Object(IntObject(data)))
 End
 
-Function FireCallback:Void(id:Int, source:Object, data:Float)
+Function FireCallback:Bool(id:Int, source:Object, data:Float)
 	' --- shortcut to auto box ---
-	FireCallback(id, source, Object(FloatObject(data)))
+	Return FireCallback(id, source, Object(FloatObject(data)))
 End
