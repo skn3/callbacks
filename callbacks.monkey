@@ -1,5 +1,7 @@
 Strict
 
+'version 2
+' - added debugging
 'version 1
 ' - first commit
 
@@ -7,10 +9,13 @@ Import monkey.boxes
 Import monkey.map
 Import skn3.arraylist
 
+#DEBUG_CALLBACKS = false
+
 Private
 Global callbackIdCount:Int
 Global callbackIds:= New ArrayList<String>
 Global recieverIdLists:= New IntMap<ArrayList<CallbackReciever>>
+Global debugReciever:CallbackDebugReciever
 Public
 
 'public interface
@@ -18,7 +23,16 @@ Interface CallbackReciever
 	Method OnCallback:Bool(id:Int, source:Object, data:Object)
 End
 
+Interface CallbackDebugReciever
+	Method OnDebugCallback:Void(id:Int, source:Object, data:Object)
+End
+
 'public api
+Function SetCallbackDebugReciever:Void(reciever:CallbackDebugReciever)
+	' --- change reciever of debug callbacks ---
+	debugReciever = reciever
+End
+
 Function RegisterCallbackId:Int(name:string)
 	' --- register a uniquee callback id ---
 	'create new id
@@ -77,6 +91,11 @@ Function FireCallback:Bool(id:Int, source:Object, data:Object)
 	' --- fires a callback ---
 	Local list:= recieverIdLists.ValueForKey(id)
 	If list
+		'do debug log
+		#IF DEBUG_CALLBACKS
+			If debugReciever debugReciever.OnDebugCallback(id, source, data)
+		#EndIf
+		
 		'fire callback for all recievers
 		For Local index:= 0 Until list.count
 			'check for a callback blocking further execution
